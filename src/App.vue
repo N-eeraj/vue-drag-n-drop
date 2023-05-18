@@ -8,11 +8,14 @@ const handleWidgetMoved = ({x, y}, position) => {
   [...mainContainer.value.children].forEach((widget, index) => {
     if (index === position) return
     const {top, right, bottom, left} = widget.getBoundingClientRect()
-    if (left <= x && x <= right && top <= y && y <= bottom) {
-      const from = widgets.value[position]
-      const to = widgets.value[index]
-      widgets.value[position] = to
-      widgets.value[index] = from
+    const dropWidget = widgets.value[position]
+    if (index === 0 && x <= left && bottom >= y) {
+      widgets.value.splice(position, 1)
+      widgets.value.splice(index, 0, dropWidget)
+    }
+    else if (left <= x && x <= right && top <= y && y <= bottom) {
+      widgets.value.splice(position, 1)
+      widgets.value.splice(index, 0, dropWidget)
     }
   })
 }

@@ -1,12 +1,13 @@
 {
-  "name": "drag-n-drop",
+  "name": "vue-drag-n-drop",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "vue": "^3.2.47"

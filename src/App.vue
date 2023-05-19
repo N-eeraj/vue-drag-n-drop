@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import WidgetBoard from './components/WidgetBoard.vue'
 import Widget from './components/Widget.vue'
+import Chart from './components/Chart.vue'
+import Table from './components/Table.vue'
+import Graph from './components/Graph.vue'
 
 const mainContainer = ref(null)
 
@@ -54,77 +57,89 @@ const handleWidgetMoved = ({x, y}, position) => {
   })
 
   // handle movement when widget is moved to the end of a row
-  if (completed) return
-  const dropWidget = widgets.value[position]
-  widgets.value.splice(position, 1)
-  widgets.value.splice(endPosition, 0, dropWidget)
+  if (!completed) {
+    const dropWidget = widgets.value[position]
+    widgets.value.splice(position, 1)
+    widgets.value.splice(endPosition, 0, dropWidget)
+  }
+
+  console.log(widgets.value)
 }
 
 const widgets = ref([
   {
-    id: 0,
-    classes: 'col-3 bg-red'
+    widget: 'graph',
+    cols: 3
   },
   {
-    id: 1,
-    classes: 'col-6 bg-green'
+    widget: 'chart',
+    cols: 6
   },
   {
-    id: 2,
-    classes: 'col-9 bg-blue'
+    widget: 'table',
+    cols: 9
   },
   {
-    id: 3,
-    classes: 'col-12 bg-red'
+    widget: 'table',
+    cols: 12
   },
   {
-    id: 4,
-    classes: 'col-3 bg-green'
+    widget: 'chart',
+    cols: 3
   },
   {
-    id: 5,
-    classes: 'col-3 bg-blue'
+    widget: 'table',
+    cols: 3
   },
   {
-    id: 6,
-    classes: 'col-6 bg-red'
+    widget: 'chart',
+    cols: 6
   },
   {
-    id: 7,
-    classes: 'col-3 bg-green'
+    widget: 'table',
+    cols: 3
   },
   {
-    id: 8,
-    classes: 'col-3 bg-red'
+    widget: 'table',
+    cols: 3
   },
   {
-    id: 9,
-    classes: 'col-3 bg-green'
+    widget: 'table',
+    cols: 3
   },
   {
-    id: 10,
-    classes: 'col-3 bg-blue'
+    widget: 'graph',
+    cols: 3
   },
   {
-    id: 11,
-    classes: 'col-6 bg-blue'
+    widget: 'table',
+    cols: 6
   }
 ])
+
+const getWidget = widget => {
+  switch (widget) {
+    case 'chart':
+      return Chart
+    case 'table':
+      return Table
+    case 'graph':
+      return Graph
+  }
+}
 </script>
 
 <template>
   <WidgetBoard ref="mainContainer">
 
     <Widget
-      v-for="({id, classes}, index) in widgets"
-      :key="id"
-      :class="classes"
+      v-for="({widget, cols}, index) in widgets"
+      :cols="cols"
+      :key="index"
       @rearrange="coords => handleWidgetMoved(coords, index)">
-      Test Widget
-      <h1>
-        {{ id }}
-      </h1>
+      <component v-bind:is="getWidget(widget)" />
     </Widget>
+
 
   </WidgetBoard>
 </template>
@@ -138,28 +153,5 @@ const widgets = ref([
 
 body {
   background-color: #123;
-}
-
-.col-3 {
-  width: calc(25% - 20px);
-}
-.col-6 {
-  width: calc(50% - 20px);
-}
-.col-9 {
-  width: calc(75% - 20px);
-}
-.col-12 {
-  width: calc(100% - 20px);
-}
-
-.bg-red {
-  background-color: #f99;
-}
-.bg-green {
-  background-color: #9f9;
-}
-.bg-blue {
-  background-color: #7af;
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import WidgetBoard from './components/WidgetBoard.vue'
 import Widget from './components/Widget.vue'
 
 const mainContainer = ref(null)
@@ -8,7 +9,7 @@ const handleWidgetMoved = ({x, y}, position) => {
   let completed = false
   let endPosition = null;
 
-  [...mainContainer.value.children].forEach((widget, index, array) => {
+  [...mainContainer.value.$el.children].forEach((widget, index, array) => {
     // omit the dragged widget
     if (index === position || completed) return
 
@@ -48,7 +49,7 @@ const handleWidgetMoved = ({x, y}, position) => {
     }
     // check if widget is moved to end of a row
     else if (right <= x  && top <= y && y <= bottom) {
-      endPosition = index + 1
+      endPosition = index < position ? index + 1 : index
     }
   })
 
@@ -103,19 +104,21 @@ const widgets = ref([
   {
     id: 10,
     classes: 'col-3 bg-blue'
+  },
+  {
+    id: 11,
+    classes: 'col-6 bg-blue'
   }
 ])
 </script>
 
 <template>
-  <div
-    ref="mainContainer"
-    id="main-container">
+  <WidgetBoard ref="mainContainer">
 
     <Widget
       v-for="({id, classes}, index) in widgets"
-      :class="classes"
       :key="id"
+      :class="classes"
       @rearrange="coords => handleWidgetMoved(coords, index)">
       Test Widget
       <h1>
@@ -123,7 +126,7 @@ const widgets = ref([
       </h1>
     </Widget>
 
-  </div>
+  </WidgetBoard>
 </template>
 
 <style>
@@ -135,17 +138,6 @@ const widgets = ref([
 
 body {
   background-color: #123;
-}
-
-#main-container {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 20px;
-  width: 100%;
-  max-height: 100vh;
-  padding: 30px;
-  overflow-y: auto;
 }
 
 .col-3 {

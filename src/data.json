@@ -1,0 +1,50 @@
+[
+    {
+      "widget": "graph",
+      "cols": 3
+    },
+    {
+      "widget": "chart",
+      "cols": 6
+    },
+    {
+      "widget": "table",
+      "cols": 9
+    },
+    {
+      "widget": "table",
+      "cols": 12
+    },
+    {
+      "widget": "chart",
+      "cols": 3
+    },
+    {
+      "widget": "table",
+      "cols": 3
+    },
+    {
+      "widget": "chart",
+      "cols": 6
+    },
+    {
+      "widget": "table",
+      "cols": 3
+    },
+    {
+      "widget": "table",
+      "cols": 3
+    },
+    {
+      "widget": "table",
+      "cols": 3
+    },
+    {
+      "widget": "graph",
+      "cols": 3
+    },
+    {
+      "widget": "table",
+      "cols": 6
+    }
+  ]

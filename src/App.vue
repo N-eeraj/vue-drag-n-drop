@@ -1,12 +1,19 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import WidgetBoard from './components/WidgetBoard.vue'
 import Widget from './components/Widget.vue'
 import Chart from './components/Chart.vue'
 import Table from './components/Table.vue'
 import Graph from './components/Graph.vue'
 
+import data from './data'
+
 const mainContainer = ref(null)
+
+const handleRemoveWidget = index => {
+  widgets.value.splice(index, 1)
+  console.log(widgets.value)
+}
 
 const handleWidgetMoved = ({x, y}, position) => {
   let completed = false
@@ -66,56 +73,7 @@ const handleWidgetMoved = ({x, y}, position) => {
   console.log(widgets.value)
 }
 
-const widgets = ref([
-  {
-    widget: 'graph',
-    cols: 3
-  },
-  {
-    widget: 'chart',
-    cols: 6
-  },
-  {
-    widget: 'table',
-    cols: 9
-  },
-  {
-    widget: 'table',
-    cols: 12
-  },
-  {
-    widget: 'chart',
-    cols: 3
-  },
-  {
-    widget: 'table',
-    cols: 3
-  },
-  {
-    widget: 'chart',
-    cols: 6
-  },
-  {
-    widget: 'table',
-    cols: 3
-  },
-  {
-    widget: 'table',
-    cols: 3
-  },
-  {
-    widget: 'table',
-    cols: 3
-  },
-  {
-    widget: 'graph',
-    cols: 3
-  },
-  {
-    widget: 'table',
-    cols: 6
-  }
-])
+const widgets = ref([])
 
 const getWidget = widget => {
   switch (widget) {
@@ -127,6 +85,10 @@ const getWidget = widget => {
       return Graph
   }
 }
+
+onMounted(() => {
+  widgets.value = data
+})
 </script>
 
 <template>
@@ -136,7 +98,8 @@ const getWidget = widget => {
       v-for="({widget, cols}, index) in widgets"
       :cols="cols"
       :key="index"
-      @rearrange="coords => handleWidgetMoved(coords, index)">
+      @rearrange="coords => handleWidgetMoved(coords, index)"
+      @remove="handleRemoveWidget(index)">
       <component v-bind:is="getWidget(widget)" />
     </Widget>
 
@@ -149,6 +112,7 @@ const getWidget = widget => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: sans-serif;
 }
 
 body {

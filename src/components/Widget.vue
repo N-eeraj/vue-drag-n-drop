@@ -6,7 +6,10 @@ defineProps({
         default: 3
     }
 })
-const emit = defineEmits(['rearrange'])
+const emit = defineEmits([
+    'rearrange',
+    'remove'
+])
 
 const handleDragStart = ({target}) => {
     target.classList.add('dragging')
@@ -20,6 +23,10 @@ const handleDragEnd = event => {
     target.classList.remove('dragging')
     emit('rearrange', {x, y})
 }
+
+const handleRemove = () => {
+    emit('remove')
+}
 </script>
 
 <template>
@@ -30,13 +37,18 @@ const handleDragEnd = event => {
         @dragstart="handleDragStart"
         @touchstart="handleTouchStart"
         @dragend="handleDragEnd"
-        @touchend="handleDragEnd">
+        @touchend="handleDragEnd"
+        @click="handleRemove">
         <slot />
+        <button class="close-icon">
+            &times;
+        </button>
     </div>
 </template>
 
 <style scoped>
 .widget {
+    position: relative;
     height: 200px;
     border-radius: 10px;
     cursor: grab;
@@ -61,6 +73,25 @@ const handleDragEnd = event => {
     cursor: grabbing;
 }
 
+.close-icon {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    border: none;
+    background-color: #0007;
+    color: #fff;
+    border-radius: 50%;
+    font-family: sans-serif;
+    line-height: 0;
+    cursor: pointer;
+}
+.close-icon:hover {
+    background-color: #a00;
+}
 @keyframes wiggle {
     from {
         transform: rotate(0.5deg);

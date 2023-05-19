@@ -5,9 +5,12 @@ import Widget from './components/Widget.vue'
 const mainContainer = ref(null)
 
 const handleWidgetMoved = ({x, y}, position) => {
+  let completed = false
+  let endPosition = null;
+
   [...mainContainer.value.children].forEach((widget, index, array) => {
     // omit the dragged widget
-    if (index === position) return
+    if (index === position || completed) return
 
     // get the boundary of the widget
     const {top, right, bottom, left} = widget.getBoundingClientRect()
@@ -17,23 +20,43 @@ const handleWidgetMoved = ({x, y}, position) => {
     if (index === 0 && x <= left && bottom >= y) {
       widgets.value.splice(position, 1)
       widgets.value.splice(index, 0, dropWidget)
+      completed = true
     }
     // check if the widget is being dragged to end of the widget board
     else if (index === (array.length - 1) && x >= left && top <= y) {
       widgets.value.splice(position, 1)
       widgets.value.splice(index, 0, dropWidget)
+      completed = true
     }
     // check if the widget is being dragged on top of another
     else if (left <= x && x <= right && top <= y && y <= bottom) {
       widgets.value.splice(position, 1)
       widgets.value.splice(index, 0, dropWidget)
+      completed = true
     }
     // check if a widget is dropped in between others
-    else if (top <= y && y <= bottom && x < left && array[index-1].getBoundingClientRect().right <= x) {
+    else if (top <= y && y <= bottom && x <= left && array[index-1].getBoundingClientRect().right <= x) {
       widgets.value.splice(position, 1)
       widgets.value.splice(index < position ? index : index - 1, 0, dropWidget)
+      completed = true
+    }
+    // check if widget is moved to start of a row
+    else if (x <= left  && top <= y && y <= bottom) {
+      widgets.value.splice(position, 1)
+      widgets.value.splice(index, 0, dropWidget)
+      completed = true
+    }
+    // check if widget is moved to end of a row
+    else if (right <= x  && top <= y && y <= bottom) {
+      endPosition = index + 1
     }
   })
+
+  // handle movement when widget is moved to the end of a row
+  if (completed) return
+  const dropWidget = widgets.value[position]
+  widgets.value.splice(position, 1)
+  widgets.value.splice(endPosition, 0, dropWidget)
 }
 
 const widgets = ref([

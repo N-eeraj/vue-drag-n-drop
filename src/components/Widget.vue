@@ -9,7 +9,7 @@ const handleTouchStart = event => {
     handleDragStart(event)
 }
 const handleDragEnd = event => {
-    const { target, x, y} = event
+    const { target, x, y } = event
     target.classList.remove('dragging')
     emit('rearrange', {x, y})
 }

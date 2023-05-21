@@ -37,10 +37,13 @@ const handleRemove = () => {
         @dragstart="handleDragStart"
         @touchstart="handleTouchStart"
         @dragend="handleDragEnd"
-        @touchend="handleDragEnd"
-        @click="handleRemove">
+        @touchend="handleDragEnd">
+
         <slot />
-        <button class="close-icon">
+
+        <button
+            class="close-icon"
+            @click="handleRemove">
             &times;
         </button>
     </div>
